@@ -18,6 +18,7 @@ public class ResolverUtil {
 	public static String WHOIS_SERV = "WHOIS_SERVER";
 	public static String WHOIS_DN = "whois.arin.net";
 	public static String CHARSET_NAME = "8859_1";
+	public static String UNKNOWN_TLD = "UNKNOWN";
 
 	public String whois(String IP) {
 		String serverName = System.getProperty(WHOIS_SERV, WHOIS_DN);
@@ -30,7 +31,7 @@ public class ResolverUtil {
 			theSocket = new Socket(server, 43);
 			out = new OutputStreamWriter(theSocket.getOutputStream(), CHARSET_NAME);
 
-			// pass in the current host to the whois
+			// pass in the current log line ip to the whois service
 			out.write(IP + "\r\n");
 			out.flush();
 
@@ -91,7 +92,7 @@ public class ResolverUtil {
 		java.lang.ProcessBuilder processBuilder = new java.lang.ProcessBuilder("dig", "-x", IP, "+short");
 
 		Process process;
-		String output = "UNKNOWN";
+		String output;
 		try {
 			process = processBuilder.start();
 			br = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -108,19 +109,20 @@ public class ResolverUtil {
 				}
 			}
 		}
-		// Filter raw ips
+		// Filter raw ips no domain names here
 		if (output != null && (output.equals(IP + ".") || output.equals(IP))) {
 			return null;
 		}
-		return processDomainFromResolvedIP(output);
+		return filterDiggForDomainName(output);
 	}
+	
 
 	// Filtering and trimming top level domains based on artifacts found after
 	// resolution calls
 
-	private String processDomainFromResolvedIP(String dugDNS) {
+	private String filterDiggForDomainName(String dugDNS) {
 		if (dugDNS == null || dugDNS.equals(""))
-			return "UNKNOWN";
+			return UNKNOWN_TLD;
 		String tld = dugDNS.substring(0, dugDNS.lastIndexOf("."));
 		tld = tld.substring(tld.lastIndexOf(".") + 1, tld.length());
 		return tld;
@@ -131,7 +133,7 @@ public class ResolverUtil {
 		String regexEmail = "OrgTechEmail:  \\S+@\\S+\\.(\\S+)";
 		Pattern pEmail = Pattern.compile(regexEmail, Pattern.DOTALL);
 
-		String domainTemp = "UNKNOWN";
+		String domainTemp = UNKNOWN_TLD;
 		Matcher m = pEmail.matcher(response);
 		if (m.find()) {
 			// extract the domain and set it

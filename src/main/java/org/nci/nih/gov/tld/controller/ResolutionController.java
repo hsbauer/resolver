@@ -21,12 +21,9 @@ public class ResolutionController {
 	DomainRepository repository;
 	
 	  @GetMapping("/domain/{ip}")
-	  Domain getDomain(@PathVariable String ip) {
-		Domain domain = repository.findByIp(ip);
-		if(domain == null ) {return service.getDomain(ip);}
-		else {
-	    return domain;
-		}
+	  String getDomain(@PathVariable String ip) {
+		Domain domain = service.getDomain(ip);
+		return domain != null? domain.getTld(): null;
 	  }
 	  
 	  @GetMapping("/domainid/{id}")

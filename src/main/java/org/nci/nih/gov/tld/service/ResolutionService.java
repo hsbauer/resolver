@@ -10,17 +10,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResolutionService {
 	
-	public static final String UNKNOWN = "UNKNOWN";
+
 	
 	@Autowired
 	DomainRepository repository;
-	
-	public String resolveFromStoredDomains(String ipFragment) {
-		
-		//Check persistent lookup for  domain value
-		
-		return null;
-	}
+
 	
 	public Domain resolveFreshDomain(String ip) {
 		
@@ -29,28 +23,34 @@ public class ResolutionService {
 	
 		//Try digg
 		String tld = util.digg(ip);
-		
-		if (tld == null)
-		{util.digg(ip);}
-		if (tld == null || tld == UNKNOWN) {
+
+		//digg can't find an ip, try whois
+		if (tld == null || tld == ResolverUtil.UNKNOWN_TLD) {
 		 tld = util.whois(ip);
 		}
-		if (tld == null) {return null;}
 
+		//Save new domain object to database
 		domain.setIp(ip);
 		domain.setTld(tld);
 		repository.save(domain);
-		if(tld == UNKNOWN) {return null;}
+		
+		//If we can't find it, Don't send a value to the controller, let it be empty
+		if(tld == ResolverUtil.UNKNOWN_TLD) {return null;}
 		return domain;
 	}
 
 	public Domain getDomain(String ip) {
+		//check the database first
 		Domain domain = repository.findByIp(ip);
+		//else resolve from services
 		if(domain == null) {
 			return resolveFreshDomain(ip);
 		}
-		else if(domain.getTld() == UNKNOWN)
+	    //return no value to the controller if we can't find domain
+		else if(
+		domain.getTld().equals(ResolverUtil.UNKNOWN_TLD))
 		{return null;}
+		
 		return domain;
 	}
 
