@@ -17,6 +17,8 @@ public class ResolutionService {
 
 	
 	public Domain resolveFreshDomain(String ip) {
+		//ip null check
+		if(ip == null) {return null;}
 		
 		Domain domain = new Domain();
 		ResolverUtil util = new ResolverUtil();
@@ -47,8 +49,7 @@ public class ResolutionService {
 			return resolveFreshDomain(ip);
 		}
 	    //return no value to the controller if we can't find domain
-		else if(
-		domain.getTld().equals(ResolverUtil.UNKNOWN_TLD))
+		else if(domain.getTld().equals(ResolverUtil.UNKNOWN_TLD))
 		{return null;}
 		
 		return domain;
