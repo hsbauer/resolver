@@ -31,7 +31,7 @@ public class ResolutionService {
 		 tld = util.whois(ip);
 		}
 
-		//Save new domain object to database
+		//Save new domain object to database including those without a domain name
 		domain.setIp(ip);
 		domain.setTld(tld);
 		repository.save(domain);
