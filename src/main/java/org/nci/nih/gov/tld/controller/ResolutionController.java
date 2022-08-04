@@ -26,11 +26,11 @@ public class ResolutionController {
 		return domain != null? domain.getTld(): null;
 	  }
 	  
-	  @GetMapping("/domainid/{id}")
-	  String findById(@PathVariable long id) {
-		Optional<Domain> domain = repository.findById(id);
-	    return domain.get().getTld();
-	  }
+//	  @GetMapping("/domainid/{id}")
+//	  String findById(@PathVariable long id) {
+//		Optional<Domain> domain = repository.findById(id);
+//	    return domain.get().getTld();
+//	  }
 	
 
 }

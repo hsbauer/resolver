@@ -1,0 +1,79 @@
+/*
+* Copyright: (c) Mayo Foundation for Medical Education and
+* Research (MFMER). All rights reserved. MAYO, MAYO CLINIC, and the
+* triple-shield Mayo logo are trademarks and service marks of MFMER.
+*
+* Distributed under the OSI-approved BSD 3-Clause License.
+* See http://ncip.github.com/URI_Resolver/LICENSE.txt for details.
+*/
+package org.nci.nih.gov.tld.model;
+
+import java.util.List;
+
+
+public class UriResults {
+	private String resourceType;
+	private String resourceName;
+	private String resourceURI;
+	private String baseEntityURI;
+	private String versionOf;
+	private List<String> identifiers;
+	public String getResourceType() {
+		return resourceType;
+	}
+	public String getResourceName() {
+		return resourceName;
+	}
+	public String getResourceURI() {
+		return resourceURI;
+	}
+	public String getBaseEntityURI() {
+		return baseEntityURI;
+	}
+	public String getVersionOf() {
+		return versionOf;
+	}
+	public List<String> getIdentifiers() {
+		return identifiers;
+	}
+	public void setResourceType(String resourceType) {
+		this.resourceType = resourceType;
+	}
+	public void setResourceName(String resourceName) {
+		this.resourceName = resourceName;
+	}
+	public void setResourceURI(String resourceURI) {
+		this.resourceURI = resourceURI;
+	}
+	public void setBaseEntityURI(String baseEntityURI) {
+		this.baseEntityURI = baseEntityURI;
+	}
+	public void setVersionOf(String versionOf) {
+		this.versionOf = versionOf;
+	}
+	public void setIdentifiers(List<String> identifiers) {
+		this.identifiers = identifiers;
+	}
+
+	public String toString(){
+		String baseEntityURI = getBaseEntityURI();
+		List<String> identifierList = getIdentifiers();
+		String resourceName = getResourceName();
+		String resourceType = getResourceType();
+		String resourceURI = getResourceURI();
+		String versionOf = getVersionOf();
+		String ids = "";
+		String seperator = "";
+		
+		if(identifierList != null){
+			ids = ", [";
+			for(String id : identifierList){
+				ids += seperator + id;
+				seperator = ", ";
+			}
+		}
+		
+		return baseEntityURI + ", " + resourceName + ", " + resourceType + ", " + resourceURI + ", " + versionOf + ", " + ids;
+	}
+
+}

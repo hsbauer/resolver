@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd ">
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    	<property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+    	
+   	<bean 
+   		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+   		<property name="ignoreResourceNotFound" value="true" />
+   		<property name="locations">
+   			<list>
+ 				<value>classpath:uriresolver.properties</value>
+				<value>file:#{ systemProperties['user.home']}/.cts2_uri/uriresolver.properties</value>     
+			</list>
+		</property>		
+   </bean>
+   
+   
+   <bean id="logDetails" 
+      class="org.nci.nih.gov.tld.util.LogDetails">
+      <property name="level" value="${log.level}" />
+      	<property name="fileLocations">
+   			<list>
+   				<value>file:"${log.filelocation}"</value>
+				<value>file:#{ systemProperties['user.home']}/.cts2_uri/uriresolver.log</value>     
+ 				<value>classpath:uriresolver.log</value>
+			</list>
+      	</property>
+   </bean>
+
+<!--	<bean id="databaseSecurity"
+      class="edu.mayo.cts2.uriresolver.security.DatabaseSecurity">
+ 		<property name="dbEditable" value="${db.editable}" />
+      	<property name="fileLocations">
+   			<list>
+				<value>file:#{ systemProperties['user.home']}/.cts2_uri/user.properties</value>     
+ 				<value>classpath:user.properties</value>
+			</list>
+      	</property>
+ 	</bean> -->
+ 
+   <bean id="uriJDBCTemplate" 
+      class="org.nci.nih.gov.tld.repo.UriDAOJdbc">
+   </bean>
+   
+     <bean id="uriJDBCSecureTemplate" 
+      class="org.nci.nih.gov.tld.repo.UriDAOSecure">
+   </bean>
+   <bean id="dataSource" 
+      class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+      <property name="driverClassName" value="${db.driverClassName}" />
+      <property name="url" value="${db.url}" />
+      <property name="username" value="${db.username}" />
+      <property name="password" value="${db.password}" />
+   </bean>
+
+
+   <bean id="h2DataSource" 
+      class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+      <property name="driverClassName" value="org.h2.Driver" />
+      <property name="url" value="jdbc:h2:mem:uriresolver;MODE=MySQL;DB_CLOSE_DELAY=-1" />
+   </bean>
+   
+   
+</beans>

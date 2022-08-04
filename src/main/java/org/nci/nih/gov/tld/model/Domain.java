@@ -12,21 +12,12 @@ import javax.persistence.Table;
 public class Domain {
 	
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+
 	@Column(name = "ip")
 	private String ip;
 	@Column(name = "tld")
 	private String tld;
 	
-	
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public String getIp() {
 		return ip;
